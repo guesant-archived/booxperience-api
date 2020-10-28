@@ -4,13 +4,14 @@ import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
 import { getEnv } from "./config/env";
+import { setupDB } from "./config/setup-db";
 import { ResponseError } from "./interfaces/ResponseError";
 import routes from "./routes";
 
 const env = getEnv();
 const isProduction = env.NODE_ENV === "production";
 
-function main() {
+async function main() {
   const app = express();
   app.use(cors());
   app.use(helmet());
@@ -20,6 +21,7 @@ function main() {
   if (!isProduction) {
     app.use(errorhandler());
   }
+  await setupDB(env);
   app.use("/", routes);
   app.use((_req, _res, next) => {
     next(new ResponseError("Not Found", 404));

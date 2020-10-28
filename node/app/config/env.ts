@@ -4,6 +4,7 @@ setupEnv();
 
 export const DEFAULT_ENV = {
   PORT: "1337",
+  MONGODB_URI: "mongodb://localhost:27017/db",
   NODE_ENV: "production",
 };
 
