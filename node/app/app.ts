@@ -1,3 +1,4 @@
+import cors from "cors";
 import dotenv from "dotenv";
 import errorhandler from "errorhandler";
 import express from "express";
@@ -13,6 +14,7 @@ const PORT = process.env.PORT || 1337;
 
 function main() {
   const app = express();
+  app.use(cors());
   app.use(helmet());
   app.use(morgan("common"));
   app.use(express.json());
