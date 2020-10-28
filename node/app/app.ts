@@ -1,16 +1,14 @@
 import cors from "cors";
-import dotenv from "dotenv";
 import errorhandler from "errorhandler";
 import express from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { getEnv } from "./config/env";
 import { ResponseError } from "./interfaces/ResponseError";
 import routes from "./routes";
 
-dotenv.config();
-
-const isProduction = process.env.NODE_ENV === "production";
-const PORT = process.env.PORT || 1337;
+const env = getEnv();
+const isProduction = env.NODE_ENV === "production";
 
 function main() {
   const app = express();
@@ -57,8 +55,8 @@ function main() {
       });
     },
   );
-  app.listen(PORT, () => {
-    console.log(`[info] - Listening at http://0.0.0.0:${PORT}`);
+  app.listen(env.PORT, () => {
+    console.log(`[info] - Listening at http://0.0.0.0:${env.PORT}`);
   });
 }
 
