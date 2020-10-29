@@ -1,3 +1,4 @@
+import alias from "@rollup/plugin-alias";
 import commonjs from "@rollup/plugin-commonjs";
 import json from "@rollup/plugin-json";
 import resolve from "@rollup/plugin-node-resolve";
@@ -13,6 +14,7 @@ export default [
     },
     plugins: [
       json(),
+      alias({ entries: [{ find: /@\/(\*)/, replacement: "./app/$1" }] }),
       resolve({ preferBuiltins: true }),
       commonjs(),
       typescript(),
