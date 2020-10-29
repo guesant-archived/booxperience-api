@@ -1,5 +1,5 @@
+import { Env } from "@/interfaces/Env";
 import mongoose from "mongoose";
-import { Env } from "../interfaces/Env";
 
 export const setupDB = async (env: Env) => {
   env.NODE_ENV !== "production" && mongoose.set("debug", true);

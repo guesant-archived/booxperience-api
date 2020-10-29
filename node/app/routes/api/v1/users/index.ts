@@ -1,13 +1,13 @@
-import express from "express";
 import {
   UsersLogin,
   UsersLoginValidation,
-} from "../../../../controllers/UsersController/login";
+} from "@/controllers/UsersController/login";
 import {
   UsersNew,
   UsersNewValidation,
-} from "../../../../controllers/UsersController/new";
-import BodyValidatorMiddleware from "../../../../middlewares/body-validator-middleware";
+} from "@/controllers/UsersController/new";
+import BodyValidatorMiddleware from "@/middlewares/body-validator-middleware";
+import express from "express";
 
 const users = express.Router();
 users.post("/", BodyValidatorMiddleware(UsersNewValidation), UsersNew);

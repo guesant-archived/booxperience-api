@@ -1,6 +1,6 @@
+import User from "@/models/User";
 import { RequestHandler } from "express";
 import * as yup from "yup";
-import User from "../../../models/User";
 
 export const UsersLoginValidation = yup.object().shape({
   account: yup

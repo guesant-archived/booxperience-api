@@ -1,8 +1,8 @@
+import { JWT_SECRET } from "@/config/security";
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
-import jwt from "jsonwebtoken";
-import { JWT_SECRET } from "../config/security";
 
 export const AccountSchemaDefinition: mongoose.SchemaDefinition = {
   username: {
