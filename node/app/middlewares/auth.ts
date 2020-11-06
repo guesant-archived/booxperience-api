@@ -1,5 +1,5 @@
 import { JWT_SECRET } from "@/config/security";
-import User from "@/models/User";
+import { User } from "@/models/User";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { getTokenFromHeader } from "../utils/get-token-from-header";
@@ -10,7 +10,7 @@ const authMiddlewareGenerator = (strict: boolean) =>
     const token = getTokenFromHeader(req);
     if (token === null || !token) {
       if (!strict) {
-        (req as AuthedRequest).account = {
+        (req as AuthedRequest).auth = {
           isAuthed: false,
           user: null,
         };
@@ -23,7 +23,7 @@ const authMiddlewareGenerator = (strict: boolean) =>
           if (strict) {
             return res.sendStatus(403);
           }
-          (req as AuthedRequest).account = {
+          (req as AuthedRequest).auth = {
             isAuthed: false,
             user: null,
           };
@@ -35,7 +35,7 @@ const authMiddlewareGenerator = (strict: boolean) =>
           if (!user) {
             return res.sendStatus(403);
           }
-          (req as AuthedRequest).account = {
+          (req as AuthedRequest).auth = {
             isAuthed: true,
             user,
           };

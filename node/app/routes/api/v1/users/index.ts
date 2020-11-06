@@ -1,16 +1,17 @@
 import {
-  UsersLogin,
-  UsersLoginValidation,
-} from "@/controllers/UsersController/login";
+  LoginUser,
+  LoginUserValidation,
+} from "@/controllers/UsersController/login-user";
 import {
-  UsersNew,
-  UsersNewValidation,
-} from "@/controllers/UsersController/new";
+  NewUser,
+  NewUserValidation,
+} from "@/controllers/UsersController/new-user";
 import BodyValidatorMiddleware from "@/middlewares/body-validator-middleware";
 import express from "express";
 
 const users = express.Router();
-users.post("/", BodyValidatorMiddleware(UsersNewValidation), UsersNew);
-users.post("/login", BodyValidatorMiddleware(UsersLoginValidation), UsersLogin);
 
-export default users;
+users.post("/", BodyValidatorMiddleware(NewUserValidation), NewUser);
+users.post("/login", BodyValidatorMiddleware(LoginUserValidation), LoginUser);
+
+export { users };

@@ -1,8 +1,8 @@
-import User from "@/models/User";
+import { User } from "@/models/User";
 import { RequestHandler } from "express";
 import * as yup from "yup";
 
-export const UsersNewValidation = yup.object().shape({
+export const NewUserValidation = yup.object().shape({
   account: yup
     .object()
     .shape({
@@ -26,15 +26,15 @@ export const UsersNewValidation = yup.object().shape({
     .required(),
 });
 
-export const UsersNew: RequestHandler = async (req, res, next) => {
-  const user = new User();
-  const { username, password } = req.body.account;
-  user.username = username;
-  user.setPassword(password);
-  user
-    .save()
-    .then(() => {
-      return res.json({ account: user.toAuthJSON() });
-    })
-    .catch(next);
+export const NewUser: RequestHandler = async (req, res, next) => {
+  try {
+    const user = new User();
+    const { username, password } = req.body.account;
+    user.username = username;
+    user.setPassword(password);
+    await user.save();
+    return res.json({ account: user.toAuthJSON() });
+  } catch (e) {
+    return next(e);
+  }
 };

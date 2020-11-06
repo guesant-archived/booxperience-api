@@ -1,22 +1,24 @@
-import mongoose from "mongoose";
+import * as mongoose from "mongoose";
 import { AccountDoc, getAccountSchema } from "./GenericAccount";
 
 const UserSchema = getAccountSchema({
-  name: String,
+  publicInfo: {
+    isVerified: { type: mongoose.Schema.Types.Boolean, default: false },
+    name: { type: mongoose.Schema.Types.String, default: "" },
+  },
 });
 
-export interface UserDoc extends AccountDoc {
-  name: string;
-  publicJSON: () => any;
-}
-
-UserSchema.methods.publicJSON = function publicJSON() {
-  const {
-    _doc: { hash, salt, ...personalInfo },
-  } = this;
-  return { ...personalInfo };
+export type UserDoc = AccountDoc & {
+  publicInfo: {
+    isVerified: boolean;
+    name: string;
+  };
+  publicJSON: () => UserDoc["publicInfo"] & { username: string };
 };
 
-const User = mongoose.model<UserDoc>("User", UserSchema);
+UserSchema.methods.publicJSON = function publicJSON(this: UserDoc) {
+  const { publicInfo, username } = this;
+  return { username, publicInfo };
+};
 
-export default User;
+export const User = mongoose.model<UserDoc>("User", UserSchema);

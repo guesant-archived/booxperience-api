@@ -13,8 +13,10 @@ export const AccountSchemaDefinition: mongoose.SchemaDefinition = {
     match: [/^[a-zA-Z0-9]+$/, "is valid"],
     index: true,
   },
-  hash: String,
-  salt: String,
+  privateInfo: {
+    hash: String,
+    salt: String,
+  },
 };
 
 const getHash = (password: string, salt: string) => {
@@ -26,29 +28,29 @@ const getHash = (password: string, salt: string) => {
 export const getAccountSchema = (extra?: mongoose.SchemaDefinition) => {
   const schema = new mongoose.Schema(AccountSchemaDefinition);
   schema.plugin(uniqueValidator, { message: "is already taken." });
-  schema.methods.validPassword = function (password: string) {
-    return this.hash === getHash(password, this.salt);
+  schema.methods.validPassword = function (this: AccountDoc, password: string) {
+    return this.privateInfo.hash === getHash(password, this.privateInfo.salt);
   };
-  schema.methods.setPassword = function (password: string) {
-    this.salt = crypto.randomBytes(16).toString("hex");
-    this.hash = getHash(password, this.salt);
+  schema.methods.setPassword = function (this: AccountDoc, password: string) {
+    this.privateInfo.salt = crypto.randomBytes(16).toString("hex");
+    this.privateInfo.hash = getHash(password, this.privateInfo.salt);
   };
-  schema.methods.generateJWT = function () {
-    const today = new Date();
-    const exp = new Date(today);
-    exp.setDate(today.getDate() + 2);
+  schema.methods.generateJWT = function (
+    this: AccountDoc,
+    options: jwt.SignOptions = { expiresIn: "2 days" },
+  ) {
     return jwt.sign(
       {
-        exp: exp.getTime() / 1000,
         data: {
           id: this._id,
           username: this.username,
         },
       },
       JWT_SECRET,
+      { ...options },
     );
   };
-  schema.methods.toAuthJSON = function () {
+  schema.methods.toAuthJSON = function (this: AccountDoc) {
     const { username } = this;
     return {
       username,
@@ -61,10 +63,12 @@ export const getAccountSchema = (extra?: mongoose.SchemaDefinition) => {
 
 export interface AccountDoc extends mongoose.Document {
   username: string;
-  hash: string;
-  salt: string;
+  privateInfo: {
+    hash: string;
+    salt: string;
+  };
   validPassword: (password: string) => boolean;
   setPassword: (password: string) => void;
-  generateJWT: () => string;
-  toAuthJSON: () => any;
+  generateJWT: (options?: jwt.SignOptions) => string;
+  toAuthJSON: () => { username: string; token: string };
 }

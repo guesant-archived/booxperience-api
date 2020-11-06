@@ -9,7 +9,7 @@ export type AuthPayload = { [key: string]: any } & {
 };
 
 export type AuthedRequestStrict = Request & {
-  account: {
+  auth: {
     isAuthed: true;
     user: UserDoc;
   };
@@ -18,7 +18,7 @@ export type AuthedRequestStrict = Request & {
 export type AuthedRequest =
   | AuthedRequestStrict
   | (Request & {
-      account: {
+      auth: {
         isAuthed: false;
         user: null;
       };
