@@ -1,7 +1,10 @@
 import * as mongoose from "mongoose";
-import { AccountDoc, getAccountSchema } from "./GenericAccount";
+import {
+  AccountDoc,
+  GenerateAccountSchema,
+} from "./generic/GenerateAccountSchema";
 
-const UserSchema = getAccountSchema({
+const UserSchema = GenerateAccountSchema({
   publicInfo: {
     isVerified: { type: mongoose.Schema.Types.Boolean, default: false },
     name: { type: mongoose.Schema.Types.String, default: "" },

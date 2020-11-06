@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 
-export const AccountSchemaDefinition: mongoose.SchemaDefinition = {
+const AccountSchemaDefinition: mongoose.SchemaDefinition = {
   username: {
     type: String,
     lowercase: true,
@@ -25,7 +25,21 @@ const getHash = (password: string, salt: string) => {
     .toString("hex");
 };
 
-export const getAccountSchema = (extra?: mongoose.SchemaDefinition) => {
+export type AccountGeneric = {
+  username: string;
+  privateInfo: {
+    hash: string;
+    salt: string;
+  };
+  validPassword: (password: string) => boolean;
+  setPassword: (password: string) => void;
+  generateJWT: (options?: jwt.SignOptions) => string;
+  toAuthJSON: () => { username: string; token: string };
+};
+
+export type AccountDoc = mongoose.Document & AccountGeneric;
+
+export const GenerateAccountSchema = (extra?: mongoose.SchemaDefinition) => {
   const schema = new mongoose.Schema(AccountSchemaDefinition);
   schema.plugin(uniqueValidator, { message: "is already taken." });
   schema.methods.validPassword = function (this: AccountDoc, password: string) {
@@ -60,15 +74,3 @@ export const getAccountSchema = (extra?: mongoose.SchemaDefinition) => {
   extra && schema.add(extra);
   return schema;
 };
-
-export interface AccountDoc extends mongoose.Document {
-  username: string;
-  privateInfo: {
-    hash: string;
-    salt: string;
-  };
-  validPassword: (password: string) => boolean;
-  setPassword: (password: string) => void;
-  generateJWT: (options?: jwt.SignOptions) => string;
-  toAuthJSON: () => { username: string; token: string };
-}
