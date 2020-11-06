@@ -11,13 +11,18 @@ const UserSchema = GenerateAccountSchema({
   },
 });
 
-export type UserDoc = AccountDoc & {
+export type UserGeneric = {
   publicInfo: {
     isVerified: boolean;
     name: string;
   };
-  publicJSON: () => UserDoc["publicInfo"] & { username: string };
+  publicJSON: () => {
+    username: string;
+    publicInfo: UserGeneric["publicInfo"];
+  };
 };
+
+export type UserDoc = AccountDoc & UserGeneric;
 
 UserSchema.methods.publicJSON = function publicJSON(this: UserDoc) {
   const { publicInfo, username } = this;
