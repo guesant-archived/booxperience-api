@@ -2,7 +2,7 @@ import { JWT_SECRET } from "@/config/security";
 import User from "@/models/User";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
-import { getTokenFromHeader } from "../helpers/get-token-from-header";
+import { getTokenFromHeader } from "../utils/get-token-from-header";
 import { AuthedRequest, AuthPayload } from "../types/Auth";
 
 const authMiddlewareGenerator = (strict: boolean) =>
