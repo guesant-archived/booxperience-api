@@ -26,7 +26,7 @@ export const NewUserValidation = yup.object().shape({
     .required(),
 });
 
-export const NewUser: RequestHandler = async (req, res, next) => {
+export const NewUser = (async (req, res, next) => {
   try {
     const user = new User();
     const { username, password } = req.body.account;
@@ -37,4 +37,4 @@ export const NewUser: RequestHandler = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
-};
+}) as RequestHandler;

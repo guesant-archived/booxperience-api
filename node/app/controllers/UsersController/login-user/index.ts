@@ -16,7 +16,7 @@ export const LoginUserValidation = yup.object().shape({
     .required(),
 });
 
-export const LoginUser: RequestHandler = async (req, res, next) => {
+export const LoginUser = (async (req, res, next) => {
   const { username, password } = req.body.account;
   await User.findOne({ username })
     .then((user) => {
@@ -30,4 +30,4 @@ export const LoginUser: RequestHandler = async (req, res, next) => {
       }
     })
     .catch(next);
-};
+}) as RequestHandler;
