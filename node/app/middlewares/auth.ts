@@ -3,7 +3,7 @@ import { User } from "@/models/User";
 import { RequestHandler } from "express";
 import jwt from "jsonwebtoken";
 import { getTokenFromHeader } from "../utils/get-token-from-header";
-import { AuthedRequest, AuthPayload } from "../types/Auth";
+import { AuthedRequest, AuthPayload } from "../interfaces/Auth";
 
 const authMiddlewareGenerator = (strict: boolean) =>
   ((req, res, next) => {
