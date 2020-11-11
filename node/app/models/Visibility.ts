@@ -1,70 +1,8 @@
-import { ApplyDefault } from "@/utils/apply-default";
+import { IUserDoc } from "@/interfaces/IModelUser";
+import { IVisibilityDoc } from "@/interfaces/IModelVisibility";
+import { equalDocumentID } from "@/utils/compare-id";
 import * as mongoose from "mongoose";
-import * as yup from "yup";
-import { User, UserDoc } from "./User";
-
-export const VisibilityObjectSchema = ({
-  strict = false,
-  defaults = true,
-}: { strict?: boolean; defaults?: boolean } = {}) => {
-  const isRequired = strict ? "required" : "notRequired";
-  const applyDefault = ApplyDefault(defaults);
-  return yup
-    .object()
-    .shape({
-      isPrivate: yup.boolean()[isRequired]().default(applyDefault(false)),
-      isIndexable: yup.boolean()[isRequired]().default(applyDefault(true)),
-      privateAllowedUsers: yup
-        .array()
-        .of(yup.string())
-        [isRequired]()
-        .default(applyDefault([])),
-      publicBlockedUsers: yup
-        .array()
-        .of(yup.string())
-        [isRequired]()
-        .default(applyDefault([])),
-    })
-    [isRequired]()
-    .default(applyDefault({}));
-};
-
-type ISetUserGeneric<T extends "privateAllowedUsers" | "publicBlockedUsers"> = (
-  users: VisibilityGeneric[T],
-) => void;
-
-export type VisibilityGeneric = {
-  isPrivate: boolean;
-  isIndexable: boolean;
-  user: mongoose.Schema.Types.ObjectId & UserDoc;
-  usedIn: mongoose.Schema.Types.ObjectId[];
-  privateAllowedUsers: mongoose.Schema.Types.ObjectId[];
-  publicBlockedUsers: mongoose.Schema.Types.ObjectId[];
-  setPrivateAllowedUsers: ISetUserGeneric<"privateAllowedUsers">;
-  setPublicBlockedUsers: ISetUserGeneric<"publicBlockedUsers">;
-};
-
-export type VisibilityDoc = mongoose.Document & VisibilityGeneric;
-
-const VisibilitySchemaValidators = {
-  EmptyBlockedUsersInPrivateVisibility: function (this: VisibilityDoc) {
-    if (this.isPrivate && this.publicBlockedUsers.length) {
-      this.publicBlockedUsers = [];
-    }
-    return true;
-  },
-  EmptyAllowedUsersInPublicVisibility: function (this: VisibilityDoc) {
-    if (!this.isPrivate && this.privateAllowedUsers.length) {
-      this.privateAllowedUsers = [];
-    }
-    return true;
-  },
-};
-
-const {
-  EmptyAllowedUsersInPublicVisibility,
-  EmptyBlockedUsersInPrivateVisibility,
-} = VisibilitySchemaValidators;
+import { User } from "./User";
 
 const VisibilitySchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },
@@ -83,7 +21,12 @@ const VisibilitySchema = new mongoose.Schema({
     required: true,
     default: () => [],
     validate: {
-      validator: EmptyBlockedUsersInPrivateVisibility,
+      validator: function (this: IVisibilityDoc) {
+        if (this.isPrivate && this.publicBlockedUsers.length) {
+          this.publicBlockedUsers = [];
+        }
+        return true;
+      },
     },
   },
   privateAllowedUsers: {
@@ -91,7 +34,12 @@ const VisibilitySchema = new mongoose.Schema({
     required: true,
     default: () => [],
     validate: {
-      validator: EmptyAllowedUsersInPublicVisibility,
+      validator: function (this: IVisibilityDoc) {
+        if (!this.isPrivate && this.privateAllowedUsers.length) {
+          this.privateAllowedUsers = [];
+        }
+        return true;
+      },
     },
   },
   usedIn: {
@@ -101,28 +49,28 @@ const VisibilitySchema = new mongoose.Schema({
   },
 });
 
-type generics = "privateAllowedUsers" | "publicBlockedUsers";
-
-const SetUserGeneric = <T extends generics>(prop: T) =>
-  function (this: VisibilityDoc, users: VisibilityGeneric[T]) {
-    this[prop] = Array.from(new Set(users)).sort();
+const SetArrayObjectGeneric = (
+  prop: "privateAllowedUsers" | "publicBlockedUsers" | "usedIn",
+) =>
+  function (this: IVisibilityDoc, arr: any[]) {
+    (this as any)[prop] = Array.from(new Set(arr)).sort();
   };
 
-VisibilitySchema.methods.setPrivateAllowedUsers = SetUserGeneric(
+VisibilitySchema.methods.setPrivateAllowedUsers = SetArrayObjectGeneric(
   "privateAllowedUsers",
 );
 
-VisibilitySchema.methods.setPublicBlockedUsers = SetUserGeneric(
+VisibilitySchema.methods.setPublicBlockedUsers = SetArrayObjectGeneric(
   "publicBlockedUsers",
 );
 
-VisibilitySchema.pre("save", function (this: VisibilityDoc, next) {
+VisibilitySchema.pre("save", function (this: IVisibilityDoc, next) {
   this.setPrivateAllowedUsers(this.privateAllowedUsers);
   this.setPublicBlockedUsers(this.publicBlockedUsers);
   return next();
 });
 
-export const Visibility = mongoose.model<VisibilityDoc>(
+export const Visibility = mongoose.model<IVisibilityDoc>(
   "Visibility",
   VisibilitySchema,
 );

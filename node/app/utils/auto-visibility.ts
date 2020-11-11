@@ -1,11 +1,12 @@
 import { IUserDoc } from "@/interfaces/IModelUser";
+import { IVisibilityGeneric } from "@/interfaces/IModelVisibility";
 import { Optional } from "@/interfaces/Optional";
-import { Visibility, VisibilityGeneric } from "@/models/Visibility";
+import { Visibility } from "@/models/Visibility";
 import { sortedSet } from "./sorted-set";
 
 export const autoVisibility = async (
   user: IUserDoc,
-  payload: Optional<VisibilityGeneric>,
+  payload: Optional<IVisibilityGeneric>,
   { saveDocument = true }: { saveDocument?: boolean } = {},
 ) => {
   const { isPrivate = false, isIndexable = true } = payload;

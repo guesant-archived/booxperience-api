@@ -1,8 +1,9 @@
 import { AuthedRequestHandlerStrict } from "@/interfaces/Auth";
-import { VisibilityGeneric, VisibilityObjectSchema } from "@/models/Visibility";
+import { IVisibilityGeneric } from "@/interfaces/IModelVisibility";
+import { SVisibility } from "@/models/validators/SVisibility";
 import { autoVisibility } from "@/utils/auto-visibility";
 
-export const NewVisibilityValidation = VisibilityObjectSchema({
+export const NewVisibilityValidation = SVisibility({
   strict: false,
   defaults: true,
 });
@@ -14,7 +15,7 @@ export const NewVisibility = (async (req, res, next) => {
       isIndexable,
       publicBlockedUsers,
       privateAllowedUsers,
-    }: VisibilityGeneric = req.body;
+    }: IVisibilityGeneric = req.body;
     return res.json(
       await autoVisibility(req.auth.user, {
         isPrivate,
