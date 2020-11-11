@@ -1,8 +1,6 @@
+import { IUserDoc } from "@/interfaces/IModelUser";
+import { GenerateAccountSchema } from "@/models/generic/GenerateAccountSchema";
 import * as mongoose from "mongoose";
-import {
-  AccountDoc,
-  GenerateAccountSchema,
-} from "./generic/GenerateAccountSchema";
 
 const UserSchema = GenerateAccountSchema({
   publicInfo: {
@@ -11,22 +9,9 @@ const UserSchema = GenerateAccountSchema({
   },
 });
 
-export type UserGeneric = {
-  publicInfo: {
-    isVerified: boolean;
-    name: string;
-  };
-  publicJSON: () => {
-    username: string;
-    publicInfo: UserGeneric["publicInfo"];
-  };
-};
-
-export type UserDoc = AccountDoc & UserGeneric;
-
-UserSchema.methods.publicJSON = function publicJSON(this: UserDoc) {
+UserSchema.methods.publicJSON = function publicJSON(this: IUserDoc) {
   const { publicInfo, username } = this;
   return { username, publicInfo };
 };
 
-export const User = mongoose.model<UserDoc>("User", UserSchema);
+export const User = mongoose.model<IUserDoc>("User", UserSchema);

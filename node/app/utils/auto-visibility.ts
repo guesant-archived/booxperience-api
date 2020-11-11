@@ -1,10 +1,10 @@
+import { IUserDoc } from "@/interfaces/IModelUser";
 import { Optional } from "@/interfaces/Optional";
-import { UserDoc } from "@/models/User";
 import { Visibility, VisibilityGeneric } from "@/models/Visibility";
 import { sortedSet } from "./sorted-set";
 
 export const autoVisibility = async (
-  user: UserDoc,
+  user: IUserDoc,
   payload: Optional<VisibilityGeneric>,
   { saveDocument = true }: { saveDocument?: boolean } = {},
 ) => {
