@@ -2,7 +2,7 @@ import { IUserDoc } from "@/interfaces/IModelUser";
 import { IVisibilityGeneric } from "@/interfaces/IModelVisibility";
 import { Optional } from "@/interfaces/Optional";
 import { Visibility } from "@/models/Visibility";
-import { sortedSet } from "./sorted-set";
+import { sortedSet } from "@/utils/sorted-set";
 
 export const autoVisibility = async (
   user: IUserDoc,

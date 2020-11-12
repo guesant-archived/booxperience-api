@@ -1,5 +1,5 @@
+import { IUserDoc } from "@/interfaces/IModelUser";
 import { NextFunction, Request, Response } from "express";
-import { IUserDoc } from "./IModelUser";
 
 export type AuthPayload = { [key: string]: any } & {
   data: {

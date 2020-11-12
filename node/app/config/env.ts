@@ -1,4 +1,4 @@
-import { setupEnv } from "./setup-env";
+import { setupEnv } from "@/config/setup-env";
 
 setupEnv();
 

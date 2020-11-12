@@ -1,7 +1,7 @@
+import { user } from "@/routes/api/v1/user";
+import { users } from "@/routes/api/v1/users";
+import { visibility } from "@/routes/api/v1/visibility";
 import { Router } from "express";
-import { user } from "./user";
-import { users } from "./users";
-import { visibility } from "./visibility";
 
 const v1 = Router();
 

@@ -1,9 +1,9 @@
 import { IUserDoc } from "@/interfaces/IModelUser";
 import { IVisibilityDoc } from "@/interfaces/IModelVisibility";
+import { User } from "@/models/User";
 import { equalDocumentID } from "@/utils/compare-id";
 import { documentArraySet } from "@/utils/document-array-set";
 import * as mongoose from "mongoose";
-import { User } from "./User";
 
 const VisibilitySchema = new mongoose.Schema({
   user: { type: mongoose.Schema.Types.ObjectId, ref: User, required: true },

@@ -1,5 +1,5 @@
+import api from "@/routes/api";
 import { Router } from "express";
-import api from "./api";
 
 const routes = Router();
 routes.use("/api", api);
