@@ -14,8 +14,11 @@ const AccountSchemaDefinition: mongoose.SchemaDefinition = {
     index: true,
   },
   privateInfo: {
-    hash: String,
-    salt: String,
+    type: {
+      hash: String,
+      salt: String,
+    },
+    select: false,
   },
 };
 
