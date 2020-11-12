@@ -56,6 +56,28 @@ const SetArrayObjectGeneric = (
     (this as any)[prop] = Array.from(new Set(arr)).sort();
   };
 
+VisibilitySchema.methods.isUserAllowed = function (
+  this: IVisibilityDoc,
+  targetUser: IUserDoc,
+  { allowPublicIndexable = true }: { allowPublicIndexable?: boolean } = {},
+) {
+  if (!this.isIndexable && !allowPublicIndexable) return false;
+  if (!equalDocumentID(this.user, targetUser)) {
+    if (this.isPrivate) {
+      if (
+        this.privateAllowedUsers.every((u) => !equalDocumentID(u, targetUser))
+      ) {
+        return false;
+      }
+    } else {
+      if (this.publicBlockedUsers.some((u) => equalDocumentID(u, targetUser))) {
+        return false;
+      }
+    }
+  }
+  return true;
+};
+
 VisibilitySchema.methods.setPrivateAllowedUsers = SetArrayObjectGeneric(
   "privateAllowedUsers",
 );
