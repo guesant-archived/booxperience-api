@@ -86,7 +86,10 @@ VisibilitySchema.methods.setPublicBlockedUsers = SetArrayObjectGeneric(
   "publicBlockedUsers",
 );
 
+VisibilitySchema.methods.setUsedIn = SetArrayObjectGeneric("usedIn");
+
 VisibilitySchema.pre("save", function (this: IVisibilityDoc, next) {
+  this.setUsedIn(this.usedIn);
   this.setPrivateAllowedUsers(this.privateAllowedUsers);
   this.setPublicBlockedUsers(this.publicBlockedUsers);
   return next();
