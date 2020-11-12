@@ -88,6 +88,13 @@ VisibilitySchema.methods.setPublicBlockedUsers = SetArrayObjectGeneric(
 
 VisibilitySchema.methods.setUsedIn = SetArrayObjectGeneric("usedIn");
 
+VisibilitySchema.methods.pushUsedIn = function (
+  this: IVisibilityDoc,
+  item: string | mongoose.Schema.Types.ObjectId,
+) {
+  this.setUsedIn([...this.usedIn, item]);
+};
+
 VisibilitySchema.pre("save", function (this: IVisibilityDoc, next) {
   this.setUsedIn(this.usedIn);
   this.setPrivateAllowedUsers(this.privateAllowedUsers);
