@@ -1,6 +1,7 @@
 import { IUserDoc } from "@/interfaces/IModelUser";
 import { IVisibilityDoc } from "@/interfaces/IModelVisibility";
 import { equalDocumentID } from "@/utils/compare-id";
+import { documentArraySet } from "@/utils/document-array-set";
 import * as mongoose from "mongoose";
 import { User } from "./User";
 
@@ -49,11 +50,6 @@ const VisibilitySchema = new mongoose.Schema({
   },
 });
 
-const SetArrayObjectGeneric = <T extends keyof IVisibilityDoc>(prop: T) =>
-  function (this: IVisibilityDoc, arr: any[]) {
-    this[prop] = Array.from(new Set(arr)).sort();
-  };
-
 VisibilitySchema.methods.isUserAllowed = function (
   this: IVisibilityDoc,
   targetUser: IUserDoc,
@@ -76,15 +72,17 @@ VisibilitySchema.methods.isUserAllowed = function (
   return true;
 };
 
-VisibilitySchema.methods.setPrivateAllowedUsers = SetArrayObjectGeneric(
+const _documentArraySet = documentArraySet<IVisibilityDoc>();
+
+VisibilitySchema.methods.setPrivateAllowedUsers = _documentArraySet(
   "privateAllowedUsers",
 );
 
-VisibilitySchema.methods.setPublicBlockedUsers = SetArrayObjectGeneric(
+VisibilitySchema.methods.setPublicBlockedUsers = _documentArraySet(
   "publicBlockedUsers",
 );
 
-VisibilitySchema.methods.setUsedIn = SetArrayObjectGeneric("usedIn");
+VisibilitySchema.methods.setUsedIn = _documentArraySet("usedIn");
 
 VisibilitySchema.methods.pushUsedIn = function (
   this: IVisibilityDoc,
