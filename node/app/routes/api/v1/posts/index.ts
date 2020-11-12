@@ -1,3 +1,4 @@
+import * as deletePost from "@/controllers/PostController/delete-post";
 import * as newPost from "@/controllers/PostController/new-post";
 import { AuthRequired } from "@/middlewares/auth";
 import BodyValidatorMiddleware from "@/middlewares/body-validator-middleware";
@@ -11,5 +12,7 @@ posts.post(
   BodyValidatorMiddleware(newPost.NewPostValidation),
   [newPost.NewPost] as RequestHandler[],
 );
+
+posts.delete("/:id", AuthRequired, [deletePost.DeletePost] as RequestHandler[]);
 
 export { posts };
