@@ -49,11 +49,9 @@ const VisibilitySchema = new mongoose.Schema({
   },
 });
 
-const SetArrayObjectGeneric = (
-  prop: "privateAllowedUsers" | "publicBlockedUsers" | "usedIn",
-) =>
+const SetArrayObjectGeneric = <T extends keyof IVisibilityDoc>(prop: T) =>
   function (this: IVisibilityDoc, arr: any[]) {
-    (this as any)[prop] = Array.from(new Set(arr)).sort();
+    this[prop] = Array.from(new Set(arr)).sort();
   };
 
 VisibilitySchema.methods.isUserAllowed = function (
