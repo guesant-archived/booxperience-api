@@ -1,3 +1,4 @@
+import { URIGenerator } from "@/routing/URIGenerator";
 import { IRequestParams } from "@/types/IRequestParams";
 import { IRequestQuery } from "@/types/IRequestQuery";
 import { ISend } from "@/types/ISend";
@@ -11,21 +12,25 @@ export class ControllerBase<
   send: ISend;
   query: Query;
   params: Params;
+  uriGenerator: URIGenerator;
   constructor({
     body,
     send,
     query,
     params,
+    uriGenerator,
   }: {
     body: Body;
     send: ISend;
     query: Query;
     params: Params;
+    uriGenerator: URIGenerator;
   }) {
     this.body = body;
     this.send = send;
     this.query = query;
     this.params = params;
+    this.uriGenerator = uriGenerator;
   }
   error(err: any) {
     const status = err.statusCode || err.status;
