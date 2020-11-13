@@ -6,10 +6,11 @@
   "author": "Gabriel Rodrigues",
   "license": "MIT",
   "scripts": {
-    "dev": "env NODE_ENV=development concurrently 'npm:dev:watch' 'npm:dev:start'",
+    "dev": "npm run dev:prepare && env NODE_ENV=development concurrently 'npm:dev:watch' 'npm:dev:start'",
     "start": "env NODE_ENV=production node ./build/app.js",
     "prod:start": "npm run prod:build && npm run start",
     "prod:build": "env NODE_ENV=production rollup --config rollup.config.js",
+    "dev:prepare": "rm build/app.js; touch build/app.js",
     "dev:watch": "rollup --config rollup.config.js --watch",
     "dev:start": "node-dev --respawn build/app.js"
   },
