@@ -16,8 +16,8 @@
   },
   "dependencies": {
     "config": "^3.3.2",
-    "dotenv": "^8.2.0",
-    "env": "0.0.2"
+    "env": "0.0.2",
+    "query-string": "^6.13.7"
   },
   "devDependencies": {
     "@rollup/plugin-alias": "^3.1.1",
