@@ -7,14 +7,14 @@ import { dependencies } from "./package.json";
 
 export default [
   {
-    input: "app/app.ts",
+    input: "src/app.ts",
     output: {
       file: "build/app.js",
       format: "cjs",
     },
     plugins: [
       json(),
-      alias({ entries: [{ find: /@\/(\*)/, replacement: "./app/$1" }] }),
+      alias({ entries: [{ find: /@\/(\*)/, replacement: "./src/$1" }] }),
       resolve({ preferBuiltins: true }),
       commonjs(),
       typescript(),
