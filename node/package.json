@@ -11,7 +11,8 @@
     "start": "env NODE_ENV=production node ./build/app.js",
     "dev:watch": "rollup --config rollup.config.js --watch",
     "dev:start": "node-dev --respawn build/app.js",
-    "dev": "env NODE_ENV=development concurrently 'npm:dev:watch' 'npm:dev:start'"
+    "dev:prepare": "mkdir -p build; rm -f build/app.js; touch build/app.js",
+    "dev": "npm run dev:prepare && env NODE_ENV=development concurrently 'npm:dev:watch' 'npm:dev:start'"
   },
   "dependencies": {
     "concurrently": "^5.3.0",
