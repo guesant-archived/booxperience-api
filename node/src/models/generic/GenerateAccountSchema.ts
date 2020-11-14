@@ -1,4 +1,4 @@
-import { JWT_SECRET } from "@/config/security";
+import config from "config";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 import mongoose from "mongoose";
@@ -63,7 +63,7 @@ export const GenerateAccountSchema = (extra?: mongoose.SchemaDefinition) => {
           username: this.username,
         },
       },
-      JWT_SECRET,
+      config.get("api.security.jwtSecret"),
       { ...options },
     );
   };
