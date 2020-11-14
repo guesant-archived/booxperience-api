@@ -1,1 +1,1 @@
-export type IRequestParams = { [key: string]: string };
+export type IRequestParams = { [key: string]: string | number | undefined };

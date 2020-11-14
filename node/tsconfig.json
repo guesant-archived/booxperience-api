@@ -4,6 +4,7 @@
     "module": "esnext",
     "rootDir": "./src",
     "baseUrl": "./src",
+    "lib": ["ESNext"],
     "paths": {
       "@/*": ["*"]
     },

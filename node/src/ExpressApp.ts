@@ -5,14 +5,16 @@ import config from "config";
 import express, { Express, Router as ExpressRouter } from "express";
 import helmet from "helmet";
 import morgan from "morgan";
+import { Repository } from "./repositories/Repository";
+import { Security } from "./security/security";
 
 export class ExpressApp extends AppBase {
   port: number;
   host: string;
   express: Express;
   expressRouter: ExpressRouter;
-  constructor(router: Router) {
-    super(router);
+  constructor(router: Router, repository: Repository, security: Security) {
+    super(router, repository, security);
     this.port = config.get("api.port");
     this.host = config.get("api.host");
     this.express = express();
@@ -26,6 +28,9 @@ export class ExpressApp extends AppBase {
   }
   _registerRoute(uri: string, httpMethod: string, boundAction: any) {
     (this.expressRouter.route(uri) as any)[httpMethod](boundAction);
+  }
+  _registerAuthRoute(boundAction: any) {
+    this.expressRouter.route("/auth/token").post(boundAction);
   }
   run() {
     super.run();

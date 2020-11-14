@@ -4,11 +4,17 @@ import { URIGenerator } from "@/routing/URIGenerator";
 import { IBoundActions } from "@/types/IBoundActions";
 import { IRequest } from "@/types/IRequest";
 import { IResponse } from "@/types/IResponse";
+import { Repository } from "./repositories/Repository";
+import { Security } from "./security/security";
 
 export abstract class AppBase<AppRouter extends Router = Router> {
   router: AppRouter;
-  constructor(router: AppRouter) {
+  repository: Repository;
+  security: Security;
+  constructor(router: AppRouter, repository: Repository, security: Security) {
     this.router = router;
+    this.repository = repository;
+    this.security = security;
     this._registerRoute = this._registerRoute.bind(this);
     this._createRouteBoundAction = this._createRouteBoundAction.bind(this);
   }
@@ -17,6 +23,7 @@ export abstract class AppBase<AppRouter extends Router = Router> {
     httpMethod: string,
     boundAction: IBoundActions,
   ): void;
+  abstract _registerAuthRoute(arg0: any): void;
   _createRouteBoundAction(
     controllerClass: typeof ControllerBase,
     method: string,
@@ -28,6 +35,10 @@ export abstract class AppBase<AppRouter extends Router = Router> {
         ]();
       },
     ];
+    result.unshift(
+      this.security.authenticate() as any,
+      this.security.authorise(controllerClass.name, method) as any,
+    );
     return result;
   }
   _buildControllerInstance(
@@ -40,7 +51,8 @@ export abstract class AppBase<AppRouter extends Router = Router> {
       params,
       query,
       body,
-      uriGenerator: new URIGenerator(),
+      repository: this.repository,
+      uriGenerator: new URIGenerator(this.security, (req as any).user.role),
       send: (statusCode, resource, location) => {
         if (location) {
           res.location(location);
@@ -50,9 +62,11 @@ export abstract class AppBase<AppRouter extends Router = Router> {
     });
   }
   run() {
+    this.repository.registerRepositories();
     this.router.registerRoutes(
       this._registerRoute,
       this._createRouteBoundAction,
     );
+    this._registerAuthRoute(this.security.issueToken());
   }
 }
