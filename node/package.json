@@ -17,6 +17,7 @@
   "dependencies": {
     "config": "^3.3.2",
     "env": "0.0.2",
+    "halson": "^3.0.0",
     "query-string": "^6.13.7"
   },
   "devDependencies": {
