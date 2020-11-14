@@ -7,10 +7,13 @@
     "paths": {
       "@/*": ["*"]
     },
+    "lib": ["es2015"],
     "strict": true,
     "moduleResolution": "node",
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "strictNullChecks": true,
+    "experimentalDecorators": true,
     "forceConsistentCasingInFileNames": true
   }
 }
