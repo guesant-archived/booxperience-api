@@ -1,14 +1,6 @@
 import { contextFromRequester } from "@/security/RBACAuthorization";
 import { IGrants } from "@/types/IGrants";
 
-const Controllers = {
-  VisibilityController: {
-    name: "VisibilityController",
-    newVisibility: "newVisibility",
-    listVisibilities: "listVisibilities",
-  },
-};
-
 export const RBACSecurityGrants: IGrants = {
   restrict: {
     extend: [],
@@ -23,15 +15,14 @@ export const RBACSecurityGrants: IGrants = {
   user: {
     extend: ["guest"],
     roleActions: {
-      [Controllers.VisibilityController.name]: [
-        { action: "*", context: contextFromRequester },
-        Controllers.VisibilityController.newVisibility,
-        Controllers.VisibilityController.listVisibilities,
+      VisibilityController: [
+        ["getVisibility", contextFromRequester],
+        ...["newVisibility", "listVisibilities"],
       ],
     },
   },
   admin: {
     extend: ["user"],
-    roleActions: { [Controllers.VisibilityController.name]: ["*"] },
+    roleActions: { VisibilityController: ["*"] },
   },
 };
