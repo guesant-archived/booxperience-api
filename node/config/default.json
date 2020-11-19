@@ -9,6 +9,6 @@
     "security": {
       "jwtSecret": "secret"
     },
-    "logs": "common"
+    "logs": { "requests": "common" }
   }
 }
