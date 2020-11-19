@@ -6,12 +6,13 @@ import { equalDocumentID } from "@/utils/compare-id";
 import { AccessControl, Permission } from "role-acl";
 import slug from "slug";
 
-export const contextFromRequester = (
+export function contextFromRequester(
   ctx: IGrantsCtx = { progress: "act-request" },
-) =>
-  ctx.progress === "act-request"
+) {
+  return ctx.progress === "act-request"
     ? true
     : equalDocumentID(ctx.requester, ctx.owner);
+}
 
 export class RBACAuthorization {
   ac: AccessControl;
@@ -29,7 +30,7 @@ export class RBACAuthorization {
       const ac = this.ac;
       const granted = (ac
         .can(role || this.getGuestAccessLevel())
-        .context(context || {})
+        .context(context || { progress: "act-request" })
         .execute(RBACAuthorization.parseActionName(action))
         .sync()
         .on(controller) as Permission).granted;
