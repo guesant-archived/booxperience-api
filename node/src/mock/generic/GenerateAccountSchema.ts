@@ -5,6 +5,12 @@ import mongoose from "mongoose";
 import uniqueValidator from "mongoose-unique-validator";
 
 const AccountSchemaDefinition: mongoose.SchemaDefinition = {
+  role: {
+    type: String,
+    lowercase: true,
+    required: true,
+    default: () => "guest",
+  },
   username: {
     type: String,
     lowercase: true,
@@ -30,6 +36,7 @@ const getHash = (password: string, salt: string) => {
 
 export type AccountGeneric = {
   username: string;
+  role: string;
   privateInfo: {
     hash: string;
     salt: string;

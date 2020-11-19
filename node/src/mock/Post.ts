@@ -1,6 +1,6 @@
-import { IPostDoc, IPostRevision } from "@/interfaces/IModelPost";
-import { User } from "@/models/User";
-import { Visibility } from "@/models/Visibility";
+import { IPostDoc, IPostRevision } from "@/types/IModelPost";
+import { User } from "@/mock/User";
+import { Visibility } from "@/mock/Visibility";
 import * as mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema({

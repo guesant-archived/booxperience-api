@@ -1,6 +1,6 @@
-import { ICommentDoc } from "@/interfaces/IModelComment";
-import { User } from "@/models/User";
-import { Visibility } from "@/models/Visibility";
+import { User } from "@/mock/User";
+import { Visibility } from "@/mock/Visibility";
+import { ICommentDoc } from "@/types/IModelComment";
 import * as mongoose from "mongoose";
 
 const CommentSchema = new mongoose.Schema({

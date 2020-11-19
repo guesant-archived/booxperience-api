@@ -1,6 +1,6 @@
-import { IUserDoc } from "@/interfaces/IModelUser";
-import { IVisibilityDoc } from "@/interfaces/IModelVisibility";
-import { User } from "@/models/User";
+import { IUserDoc } from "@/types/IModelUser";
+import { IVisibilityDoc } from "@/types/IModelVisibility";
+import { User } from "@/mock/User";
 import { equalDocumentID } from "@/utils/compare-id";
 import { documentArraySet } from "@/utils/document-array-set";
 import * as mongoose from "mongoose";

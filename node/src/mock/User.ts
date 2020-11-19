@@ -1,8 +1,14 @@
-import { IUserDoc } from "@/interfaces/IModelUser";
-import { GenerateAccountSchema } from "@/models/generic/GenerateAccountSchema";
+import { IUserDoc } from "@/types/IModelUser";
+import { GenerateAccountSchema } from "@/mock/generic/GenerateAccountSchema";
 import * as mongoose from "mongoose";
 
 const UserSchema = GenerateAccountSchema({
+  role: {
+    type: String,
+    lowercase: true,
+    required: true,
+    default: () => "user",
+  },
   publicInfo: {
     isVerified: { type: mongoose.Schema.Types.Boolean, default: false },
     name: { type: mongoose.Schema.Types.String, default: "" },
