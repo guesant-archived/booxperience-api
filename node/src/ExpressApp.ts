@@ -1,6 +1,7 @@
 import { AppBase } from "@/AppBase";
 import { Router } from "@/routing/Router";
 import { Security } from "@/security/Security";
+import { appLogs } from "@/services/AppLogs";
 import bodyParser from "body-parser";
 import config from "config";
 import cors from "cors";
@@ -51,7 +52,7 @@ export class ExpressApp extends AppBase {
       res.status(404).send({ url: `${req.originalUrl} not found` });
     });
     this.express.listen(this.port, this.host, () => {
-      console.log(`RESTful API server started on ${this.host}:${this.port}`);
+      appLogs.info(`RESTful API server started on ${this.host}:${this.port}`);
     });
   }
 }
