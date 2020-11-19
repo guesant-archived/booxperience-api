@@ -1,4 +1,4 @@
-import { AccountDoc } from "@/models/generic/GenerateAccountSchema";
+import { AccountDoc } from "@/mock/generic/GenerateAccountSchema";
 
 export type IUserGeneric = {
   publicInfo: {

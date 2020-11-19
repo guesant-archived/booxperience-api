@@ -1,4 +1,4 @@
-import { IUserDoc } from "@/interfaces/IModelUser";
+import { IUserDoc } from "@/types/IModelUser";
 import * as mongoose from "mongoose";
 
 type ISetUserGeneric<T extends "privateAllowedUsers" | "publicBlockedUsers"> = (
