@@ -1,6 +1,10 @@
+import {
+  IControllerAuth,
+  IControllerAuthAuthed,
+} from "@/types/IControllerAuth";
+import { IControllerSend } from "@/types/IControllerSend";
 import { IRequestParams } from "@/types/IRequestParams";
 import { IRequestQuery } from "@/types/IRequestQuery";
-import { IControllerSend } from "@/types/IControllerSend";
 
 export type ControllerBaseValidMethods =
   | "error"
@@ -8,26 +12,33 @@ export type ControllerBaseValidMethods =
   | "ok"
   | "noContent";
 
-export class ControllerBase<
+export type ControllerBaseParams<
   Body = any,
+  Auth = IControllerAuth,
   Params = IRequestParams,
   Query = IRequestQuery
+> = {
+  auth: Auth;
+  body: Body;
+  query: Query;
+  params: Params;
+  send: IControllerSend;
+};
+
+export class ControllerBase<
+  Body extends any = any,
+  Auth extends IControllerAuth = IControllerAuth,
+  Params extends IRequestParams = IRequestParams,
+  Query extends IRequestQuery = IRequestQuery
 > {
+  auth: Auth;
   body: Body;
   send: IControllerSend;
   query: Query;
   params: Params;
-  constructor({
-    body,
-    query,
-    params,
-    send,
-  }: {
-    body: Body;
-    query: Query;
-    params: Params;
-    send: IControllerSend;
-  }) {
+  constructor(options: ControllerBaseParams<Body, Auth, Params, Query>) {
+    const { auth, body, query, params, send } = options;
+    this.auth = auth;
     this.body = body;
     this.send = send;
     this.query = query;
@@ -59,3 +70,9 @@ export class ControllerBase<
     this.send(204);
   }
 }
+
+export class ControllerBaseAuthed<
+  Body = any,
+  Params extends IRequestParams = IRequestParams,
+  Query extends IRequestQuery = IRequestQuery
+> extends ControllerBase<Body, IControllerAuthAuthed, Params, Query> {}
