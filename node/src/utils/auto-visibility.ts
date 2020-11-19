@@ -1,12 +1,12 @@
-import { IUserDoc } from "@/interfaces/IModelUser";
-import { IVisibilityGeneric } from "@/interfaces/IModelVisibility";
-import { Optional } from "@/interfaces/Optional";
-import { Visibility } from "@/models/Visibility";
+import { Visibility } from "@/mock/Visibility";
+import { IUserDoc } from "@/types/IModelUser";
+import { IVisibilityGeneric } from "@/types/IModelVisibility";
 import { sortedSet } from "@/utils/sorted-set";
+import { O } from "ts-toolbelt";
 
 export const autoVisibility = async (
   user: IUserDoc,
-  payload: Optional<IVisibilityGeneric>,
+  payload: O.Optional<IVisibilityGeneric>,
   { saveDocument = true }: { saveDocument?: boolean } = {},
 ) => {
   const { isPrivate = false, isIndexable = true } = payload;
