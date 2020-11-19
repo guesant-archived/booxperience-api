@@ -4,7 +4,7 @@
     "host": "127.0.0.1",
     "port": 1337,
     "db": {
-      "dbMongoURL": "mongodb://localhost:27017/db"
+      "dbMongoURI": "mongodb://localhost:27017/db"
     },
     "security": {
       "jwtSecret": "secret"
