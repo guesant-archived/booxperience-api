@@ -1,7 +1,6 @@
 import { ControllerBase } from "@/controllers/ControllerBase";
+import { indexQueue } from "./index/index";
 
 export class IndexController extends ControllerBase {
-  index() {
-    this.ok({ api: { info: "api v1" } });
-  }
+  index = indexQueue;
 }
