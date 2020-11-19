@@ -16,9 +16,10 @@ export function AccessLevel(
         action,
         context,
       );
-      if (!hasAccess) throw "UNAUTHORIZED";
+      if (!hasAccess) throw { statusCode: 403 };
       return _.call(this, ...args);
-    } catch (_) {}
-    return this.send(401);
+    } catch ({ statusCode }) {
+      return this.send(statusCode ?? 403);
+    }
   };
 }
