@@ -1,33 +1,54 @@
-import { User } from "@/models/User";
-import { RequestHandler } from "express";
-import * as yup from "yup";
+import { FunctionQueue } from "@/utils/FunctionQueue";
+import { UsersController } from "@/controllers/UsersController";
+import { BodyValidator } from "@/middlewares/ControllerValidators";
+import { User } from "@/mock/User";
+import { UserService } from "@/services/UserService";
+import { object, string } from "yup";
+import { ControllerBase } from "@/controllers/ControllerBase";
+import { IUserDoc } from "@/types/IModelUser";
 
-export const LoginUserValidation = yup.object().shape({
-  account: yup
-    .object()
-    .shape({
-      username: yup
-        .string()
-        .trim()
-        .matches(/^[a-zA-Z0-9]+$/)
-        .required(),
-      password: yup.string().min(5).matches(/\d/).required(),
-    })
-    .required(),
-});
+const validator = {
+  body: object().shape({
+    account: object()
+      .shape({
+        username: string()
+          .trim()
+          .matches(/^[a-zA-Z0-9]+$/)
+          .required(),
+        password: string().min(5).matches(/\d/).required(),
+      })
+      .required(),
+  }),
+};
 
-export const LoginUser = (async (req, res, next) => {
-  const { username, password } = req.body.account;
-  await User.findOne({ username })
-    .then((user) => {
-      if (user && user.validPassword(password)) {
-        return res.json({ account: user.toAuthJSON() });
-      } else {
-        return res.status(422).json({
+export const queueLoginUser = new FunctionQueue()
+  .fromArray([
+    BodyValidator(validator.body),
+    async function (this: ControllerBase, _) {
+      try {
+        const { username, password } = this.body.account;
+        const user = await User.findOne({ username }).select("privateInfo");
+        if (!user) throw { statusCode: 404 };
+        if (
+          !UserService.validPassword(
+            user.privateInfo.hash,
+            user.privateInfo.salt,
+            password,
+          )
+        )
+          throw { statusCode: 403 };
+        return _.call(this, user);
+      } catch (_) {
+        return this.send(422, {
           messages: ["username or password does not match"],
           errors: [],
         });
       }
-    })
-    .catch(next);
-}) as RequestHandler;
+    },
+    loginUser,
+  ])
+  .done();
+
+async function loginUser(this: UsersController, _: any, user: IUserDoc) {
+  return this.ok({ account: user.toAuthJSON() });
+}
