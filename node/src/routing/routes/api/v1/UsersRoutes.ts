@@ -6,6 +6,7 @@ export class UsersRoutes extends RoutesBase {
     super(UsersController);
   }
   getRoutes() {
+    this.addRoute("/users", "post", "newUser");
     this.addRoute("/users/login", "post", "loginUser");
     return this.routes;
   }
