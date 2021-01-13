@@ -1,0 +1,14 @@
+{
+  "debug": true,
+  "api": {
+    "host": "127.0.0.1",
+    "port": 1337,
+    "db": {
+      "dbMongoURI": "mongodb://localhost:27017/db"
+    },
+    "security": {
+      "jwtSecret": "secret"
+    },
+    "logs": { "requests": "common" }
+  }
+}
